@@ -1,0 +1,18 @@
+{
+  "environment": "prod",
+  "projectName": "GemBook_Automation",
+  "reportName": "GemBook_Automation Report",
+  "gemjarUserName": "Susheel mahobia",
+  "glueCode": "StepDefinition",
+  "gemjarSubID": "test_id",
+  "dev": {
+    "browserName": "firefox",
+    "launchUrl": "https://gembook.geminisolutions.com/#/",
+    "browserTimeout": 100
+  },
+  "prod": {
+    "browserName": "chrome",
+    "launchUrl": "https://gembook.geminisolutions.com/#/",
+    "browserTimeout": 100
+  }
+}
