@@ -49,7 +49,7 @@ public class Locators_Homepage {
     public static By AnniversaryNames = By.xpath("//div[@class='anniversary-body']//child::div[@class='anniversary-body-inner']//div[@class='name']");
     public static By AnniversaryDates = By.xpath("//div[@class='anniversary-body']//child::div[@class='anniversary-body-inner']//div[@class='date']");
     public static By NewMembersList = By.xpath("//div[@class='member-body']//child::div[@class='member-body-inner']//div[@class='member-info']");
-
+public static By AllMembersInMemberBody=By.xpath("//div[@class='member-body']//div[@class='member']//div[@class='member-body']");
     /////////////////////////////////////////////////////////
     public static By AllFiltersButton = By.xpath("//button[@class='postContainer_filterButton__19jIT']");
     public static By FiltersInsideAllFilters = By.xpath("//div[@class='postContainer_dropDown__3OFc6 postContainer_filterDiv__2lCU- postContainer_active__2rlz4']//child::ul//li");

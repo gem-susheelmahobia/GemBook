@@ -2,7 +2,7 @@ Feature: GemBook Homepage Features
 
   Background: These steps are common for every scenario
     When User clicks on sign-in button
-    And User enters gmail "susheel.mahobia@geminisolutions.com" and password "Gunjan@143" and click on next button
+    And User enters gmail "" and password "" and click on next button
     And User clicks on No on stay signed in button
     Then Login will be successful and homepage will be displayed.
 
@@ -242,7 +242,7 @@ Feature: GemBook Homepage Features
 #
 #  Scenario: Check the List of employees joined recently  should be displayed
 #    When User verifies the new members list
-#
+##
 #  Scenario: Check the complete employee details ,his/her name, contact, team, birthday, reporting manager etc should be displayed
 #    When User validates the complete profile details are visible after clicking to employee name in new members list
 
@@ -423,16 +423,26 @@ Feature: GemBook Homepage Features
 #    And User clicks on image pop up close button
 #    Then Image pop up which was opened on clicking should be closed
 #
-  Scenario: Check when multiple photos are in the post next and previous button should be present
-    When User checks the post having multiple photos
+#  Scenario: Check when multiple photos are in the post next and previous button should be present
+#    When User checks the post having multiple photos
+#
+#  Scenario Outline: Check the working of previous and next buttons of the post having multiple photos
+#    When User clicks on navigation key <Direction> of the post having multiple photos
+#    Examples:
+#      | Direction |
+#      | Previous  |
+#      | Next      |
 
-  Scenario Outline: Check the working of previous and next buttons of the post having multiple photos
-    When User clicks on navigation key <Direction> of the post having multiple photos
+  Scenario Outline: Check that after navigating to next image user is able to open image pop up or not
+    When User clicks on navigation key <Direction> of the post having multiple photos and click on image
+    And User clicks on image pop up close button
+    Then Image pop up which was opened on clicking should be closed
     Examples:
       | Direction |
       | Previous  |
       | Next      |
-  Scenario Outline: Check the working of previous and next buttons of the post having multiple photos and get the complete list
+
+  Scenario Outline: Check the working of previous and next buttons of the post having multiple photos and get the complete list to make sure able to navigate to all photos of post
     When User clicks on navigation keys to parse the complete list of photo in direction <Direction>
     Examples:
       | Direction |

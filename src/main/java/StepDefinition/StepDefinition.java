@@ -1250,7 +1250,12 @@ public class StepDefinition {
             JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
             js.executeScript("window.scrollTo(0,600)");
             STATUS status;
+            List<WebElement> All_List_member=DriverAction.getElements(Locators_Homepage.AllMembersInMemberBody);
             List<WebElement> List_new_members = DriverAction.getElements(Locators_Homepage.NewMembersList);
+            if (All_List_member.size()==0)
+            {   GemTestReporter.addTestStep("New Member ","No new members in list", STATUS.PASS, DriverAction.takeSnapShot());
+                return;
+            }
             Iterator<WebElement> new_members_list = List_new_members.iterator();
             while (new_members_list.hasNext()) {
                 WebElement single_new_member = new_members_list.next();
@@ -1271,8 +1276,13 @@ public class StepDefinition {
     public void userValidatesTheCompleteProfileDetailsAreVisibleAfterClickingToEmployeeNameInNewMembersList() {
         try {
             DriverAction.waitSec(3);
+            List<WebElement> All_List_member=DriverAction.getElements(Locators_Homepage.AllMembersInMemberBody);
             List<WebElement> List_new_members = DriverAction.getElements(Locators_Homepage.NewMembersList);
             STATUS status;
+            if (All_List_member.size()==0)
+            {   GemTestReporter.addTestStep("New Member ","No new members in list", STATUS.PASS, DriverAction.takeSnapShot());
+                return;
+            }
             for (int i = 0; i < List_new_members.size(); i++) {
                 List_new_members = DriverAction.getElements(Locators_Homepage.NewMembersList);
                 WebElement single_newmember_name = List_new_members.get(i);
@@ -2169,7 +2179,7 @@ public class StepDefinition {
             }
         }
         if (All_posts_list_having_multiple_image.size() == 0) {
-            GemTestReporter.addTestStep("Image pop up test", "No posts have image as attachment", STATUS.PASS, DriverAction.takeSnapShot());
+            GemTestReporter.addTestStep("Image pop up test", "No posts have multiple image as attachment", STATUS.PASS, DriverAction.takeSnapShot());
             return;
         }
         No_random_post_having_multiple_image = rand.nextInt(All_posts_list_having_multiple_image.size());
@@ -2182,7 +2192,7 @@ public class StepDefinition {
             status = STATUS.PASS;
         else
             status = STATUS.FAIL;
-        GemTestReporter.addTestStep("SS", "SS", status, DriverAction.takeSnapShot());
+        GemTestReporter.addTestStep("Photos Navigation keys", "Exp : Previous & Next buttons are present", status, DriverAction.takeSnapShot());
     }
 
     @When("^User clicks on navigation key (.+) of the post having multiple photos$")
@@ -2240,6 +2250,64 @@ public class StepDefinition {
         else
             status = STATUS.FAIL;
         GemTestReporter.addTestStep("Working of Navigation button", "Exp : Click on " + Directions + "", status, DriverAction.takeSnapShot());
+    }
+    @When("^User clicks on navigation key (.+) of the post having multiple photos and click on image$")
+    public void userClicksOnNavigationKeyDirectionOfThePostHavingMultiplePhotosAndClickOnImage(String Directions) {
+        DriverAction.waitSec(3);
+        JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
+        Utility.scrollToBottomOfThePageDynamically(js);                         //page is dynamic so to get all records first we are scrolling to the end of the page.
+        js.executeScript("window.scrollTo(0,0)");                 //Scrolling again to the top of the page .
+        List<WebElement> All_posts_image_container = DriverAction.getElements(Locators_Homepage.AllPostsImageContainerBody);
+        Iterator<WebElement> All_posts_image_container_list = All_posts_image_container.iterator();
+        List<WebElement> All_posts_list_having_multiple_image = new ArrayList<WebElement>();
+        WebDriverWait wait = new WebDriverWait(DriverManager.getWebDriver(), 30);
+        Random rand = new Random();
+        STATUS status;
+        WebElement MainImage;
+        WebElement NextImage;
+        WebElement image_pop_up;
+        String NextImageSrc;
+        int No_random_post_having_multiple_image;
+        WebElement Next_button;
+        WebElement Prev_button;
+        while (All_posts_image_container_list.hasNext()) {
+            WebElement single_post = All_posts_image_container_list.next();
+            int child = Integer.parseInt(single_post.getAttribute("childElementCount"));
+            if (child > 1) {
+                All_posts_list_having_multiple_image.add(single_post);
+            }
+        }
+        if (All_posts_list_having_multiple_image.size() == 0) {
+            GemTestReporter.addTestStep("Image pop up test", "No posts have multiple image as attachment", STATUS.PASS, DriverAction.takeSnapShot());
+            return;
+        }
+        No_random_post_having_multiple_image = rand.nextInt(All_posts_list_having_multiple_image.size());
+        WebElement random_post_having_multiple_image = All_posts_list_having_multiple_image.get(No_random_post_having_multiple_image);
+        js.executeScript("arguments[0].scrollIntoView({block: \"center\", inline: \"nearest\"});", random_post_having_multiple_image);
+        DriverAction.waitSec(3);
+        MainImage = random_post_having_multiple_image.findElement(By.xpath("div[@class='active carousel-item']//child::img"));
+        wait.until(ExpectedConditions.visibilityOf(MainImage));
+        DriverAction.waitSec(3);
+        if (Directions.equalsIgnoreCase("Previous")) {
+            Prev_button = random_post_having_multiple_image.findElement(By.xpath("following-sibling::a[@class='carousel-control-prev']"));
+            DriverAction.click(Prev_button, "Previous button");
+        } else if (Directions.equalsIgnoreCase("Next")) {
+            Next_button = random_post_having_multiple_image.findElement(By.xpath("following-sibling::a[@class='carousel-control-next']"));
+            DriverAction.click(Next_button, "Next button");
+        }
+        NextImage = random_post_having_multiple_image.findElement(By.xpath("div[@class='active carousel-item']//child::img"));
+        wait.until(ExpectedConditions.visibilityOf(NextImage));
+        NextImageSrc = NextImage.getAttribute("src");
+        DriverAction.click(NextImage,"Image");
+        image_pop_up = DriverAction.getElement(Locators_Homepage.ImagePopUp);
+        wait.until(ExpectedConditions.visibilityOf(image_pop_up));
+        DriverAction.waitSec(3);
+        String SrcImageInPopup = image_pop_up.getAttribute("src");
+        if (NextImageSrc.equals(SrcImageInPopup))
+            status=STATUS.PASS;
+        else
+            status=STATUS.FAIL;
+        GemTestReporter.addTestStep("Image Pop up Test", "Image pop up should open", status, DriverAction.takeSnapShot());
     }
 
     @When("^User clicks on navigation keys to parse the complete list of photo in direction (.+)$")
