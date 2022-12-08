@@ -3,6 +3,7 @@ package StepDefinition;
 import Objects.Locators;
 import Objects.Locators_Homepage;
 import Utilities.Utility;
+import com.gemini.generic.bdd.GemJarCucumberBase;
 import com.gemini.generic.reporting.GemTestReporter;
 import com.gemini.generic.reporting.STATUS;
 import com.gemini.generic.ui.utils.DriverAction;
@@ -1250,10 +1251,10 @@ public class StepDefinition {
             JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
             js.executeScript("window.scrollTo(0,600)");
             STATUS status;
-            List<WebElement> All_List_member=DriverAction.getElements(Locators_Homepage.AllMembersInMemberBody);
+            List<WebElement> All_List_member = DriverAction.getElements(Locators_Homepage.AllMembersInMemberBody);
             List<WebElement> List_new_members = DriverAction.getElements(Locators_Homepage.NewMembersList);
-            if (All_List_member.size()==0)
-            {   GemTestReporter.addTestStep("New Member ","No new members in list", STATUS.PASS, DriverAction.takeSnapShot());
+            if (All_List_member.size() == 0) {
+                GemTestReporter.addTestStep("New Member ", "No new members in list", STATUS.PASS, DriverAction.takeSnapShot());
                 return;
             }
             Iterator<WebElement> new_members_list = List_new_members.iterator();
@@ -1276,11 +1277,11 @@ public class StepDefinition {
     public void userValidatesTheCompleteProfileDetailsAreVisibleAfterClickingToEmployeeNameInNewMembersList() {
         try {
             DriverAction.waitSec(3);
-            List<WebElement> All_List_member=DriverAction.getElements(Locators_Homepage.AllMembersInMemberBody);
+            List<WebElement> All_List_member = DriverAction.getElements(Locators_Homepage.AllMembersInMemberBody);
             List<WebElement> List_new_members = DriverAction.getElements(Locators_Homepage.NewMembersList);
             STATUS status;
-            if (All_List_member.size()==0)
-            {   GemTestReporter.addTestStep("New Member ","No new members in list", STATUS.PASS, DriverAction.takeSnapShot());
+            if (All_List_member.size() == 0) {
+                GemTestReporter.addTestStep("New Member ", "No new members in list", STATUS.PASS, DriverAction.takeSnapShot());
                 return;
             }
             for (int i = 0; i < List_new_members.size(); i++) {
@@ -2251,6 +2252,7 @@ public class StepDefinition {
             status = STATUS.FAIL;
         GemTestReporter.addTestStep("Working of Navigation button", "Exp : Click on " + Directions + "", status, DriverAction.takeSnapShot());
     }
+
     @When("^User clicks on navigation key (.+) of the post having multiple photos and click on image$")
     public void userClicksOnNavigationKeyDirectionOfThePostHavingMultiplePhotosAndClickOnImage(String Directions) {
         DriverAction.waitSec(3);
@@ -2298,15 +2300,15 @@ public class StepDefinition {
         NextImage = random_post_having_multiple_image.findElement(By.xpath("div[@class='active carousel-item']//child::img"));
         wait.until(ExpectedConditions.visibilityOf(NextImage));
         NextImageSrc = NextImage.getAttribute("src");
-        DriverAction.click(NextImage,"Image");
+        DriverAction.click(NextImage, "Image");
         image_pop_up = DriverAction.getElement(Locators_Homepage.ImagePopUp);
         wait.until(ExpectedConditions.visibilityOf(image_pop_up));
         DriverAction.waitSec(3);
         String SrcImageInPopup = image_pop_up.getAttribute("src");
         if (NextImageSrc.equals(SrcImageInPopup))
-            status=STATUS.PASS;
+            status = STATUS.PASS;
         else
-            status=STATUS.FAIL;
+            status = STATUS.FAIL;
         GemTestReporter.addTestStep("Image Pop up Test", "Image pop up should open", status, DriverAction.takeSnapShot());
     }
 
@@ -2371,6 +2373,96 @@ public class StepDefinition {
             else
                 status = STATUS.FAIL;
             GemTestReporter.addTestStep("Check navigation to all images", "Exp : Able to navigate all images <br> Total images : " + TotalcountOfImages + "<br> Navigated images : " + Maintained_list.size() + "", status, DriverAction.takeSnapShot());
+        } catch (Exception e) {
+            logger.info("An exception occured !", e);
+            GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
+        }
+    }
+
+    @And("All the details of user self profiles is displayed")
+    public void allTheDetailsOfUserSelfProfilesIsDisplayed() {
+        try {
+            DriverAction.waitSec(3);
+            STATUS status;
+            WebElement EmployeeImage = DriverAction.getElement(Locators_Homepage.EmployeeProfileImageUnderProfile);
+            WebElement EmployeeName = DriverAction.getElement(Locators_Homepage.PersonsProfileName);
+            WebElement EmployeeDesignation = DriverAction.getElement(Locators_Homepage.DesignationUnderProfile);
+            WebElement Gmail = DriverAction.getElement(Locators_Homepage.GmailIdUnderProfiles);
+            WebElement Contact = DriverAction.getElement(Locators_Homepage.ContactUnderProfile);
+            if (EmployeeImage.isDisplayed() && !EmployeeName.getText().isEmpty() && !EmployeeDesignation.getText().isEmpty() && !Gmail.getText().isEmpty() && !Contact.getText().isEmpty()) {
+                status = STATUS.PASS;
+            } else
+                status = STATUS.FAIL;
+            GemTestReporter.addTestStep("Check for employee detals in self profiles ", "All the employee details should be dispalyed :<br> Name :" + EmployeeName.getText() + "<br> Employee Designation : " + EmployeeDesignation.getText() +
+                    "<br> Employee Gmail :" + Gmail.getText() + "<br> Employee Contact :" + Contact.getText(), status, DriverAction.takeSnapShot());
+        } catch (Exception e) {
+            logger.info("An exception occured !", e);
+            GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
+        }
+    }
+
+    @Then("All the details of Manager of user self profile is displayed")
+    public void allTheDetailsOfManagerOfUserSelfProfileIsDisplayed() {
+        try {
+            DriverAction.waitSec(3);
+            STATUS status;
+            WebElement ManagerDesignation = DriverAction.getElement(Locators_Homepage.ReportingManagerDesignationUnderProfiles);
+            WebElement ManagerName = DriverAction.getElement(Locators_Homepage.ReportingManagerNameUnderProfiles);
+            WebElement ManagerProfileImage = DriverAction.getElement(Locators_Homepage.ReportingManagerProfileImageUnderProfiles);
+            if (ManagerProfileImage.isDisplayed() && !ManagerDesignation.getText().isEmpty() && !ManagerName.getText().isEmpty())
+                status = STATUS.PASS;
+            else
+                status = STATUS.FAIL;
+            GemTestReporter.addTestStep("Check for manager detals in self profiles ", "All the manager details should be dispalyed :<br> Name :" + ManagerName.getText() + "<br> Manager Designation : " + ManagerDesignation.getText(), status, DriverAction.takeSnapShot());
+        } catch (Exception e) {
+            logger.info("An exception occured !", e);
+            GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
+        }
+    }
+
+    @Then("Birthday , Joining date, Hobbies of self profiles is displayed")
+    public void birthdayJoiningDateHobbiesOfSelfProfilesIsDisplayed() {
+        try {
+            DriverAction.waitSec(3);
+            STATUS status;
+            Boolean Flag = true;
+            List<WebElement> OtherDetails = DriverAction.getElements(Locators_Homepage.BirthdayJoiningDateHobbiesUnderProfile);
+            Iterator<WebElement> extradetails = OtherDetails.iterator();
+            while (extradetails.hasNext()) {
+                if (!extradetails.next().getText().isEmpty())
+                    continue;
+                else
+                    Flag = false;
+            }
+            if (Flag)
+                GemTestReporter.addTestStep("Birthday,joining dates, hobbies is displayed", "Exp : All details are displayed", STATUS.PASS, DriverAction.takeSnapShot());
+            else
+                GemTestReporter.addTestStep("Birthday,joining dates, hobbies is displayed", "Exp : All details are displayed", STATUS.FAIL, DriverAction.takeSnapShot());
+        } catch (Exception e) {
+            logger.info("An exception occured !", e);
+            GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
+        }
+    }
+
+    @Then("Check for presence of all fields")
+    public void checkForPresenceOfAllFields() {
+        try {
+            DriverAction.waitSec(3);
+            STATUS status;
+            JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
+            List<WebElement> FieldsInSelfProfile = DriverAction.getElements(Locators_Homepage.FieldsInSelfProfile);
+            Iterator<WebElement> List_of_fields= FieldsInSelfProfile.iterator();
+            while (List_of_fields.hasNext()) {
+                WebElement field=List_of_fields.next();
+                js.executeScript("arguments[0].scrollIntoView(true);", field);
+                if (field.isDisplayed())
+                    status=STATUS.PASS;
+                else
+                    status=STATUS.FAIL;
+                GemTestReporter.addTestStep("Check the presence of various fields ", "Exp :"+field.getText()+" field is present",status, DriverAction.takeSnapShot());
+
+            }
+
         } catch (Exception e) {
             logger.info("An exception occured !", e);
             GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);

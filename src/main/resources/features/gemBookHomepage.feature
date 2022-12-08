@@ -2,7 +2,7 @@ Feature: GemBook Homepage Features
 
   Background: These steps are common for every scenario
     When User clicks on sign-in button
-    And User enters gmail "" and password "" and click on next button
+    And User enters gmail "susheel.mahobia@geminisolutions.com" and password "Gunjan_SS1234" and click on next button
     And User clicks on No on stay signed in button
     Then Login will be successful and homepage will be displayed.
 
@@ -37,7 +37,7 @@ Feature: GemBook Homepage Features
 #
 #  Scenario: Check for working of profiles option
 #    When User clicks over profiles options
-#    Then Profiles option gets open.
+  # Then Profiles option gets open.
 #
 #  Scenario: Check for working of profiles option
 #    When User clicks over profiles options
@@ -239,7 +239,7 @@ Feature: GemBook Homepage Features
 #
 #  Scenario: Check List should contain anniversary dates from current date till next 7 days
 #    When User verifies the anniversary dates in anniversary list
-#
+##
 #  Scenario: Check the List of employees joined recently  should be displayed
 #    When User verifies the new members list
 ##
@@ -433,18 +433,37 @@ Feature: GemBook Homepage Features
 #      | Previous  |
 #      | Next      |
 
-  Scenario Outline: Check that after navigating to next image user is able to open image pop up or not
-    When User clicks on navigation key <Direction> of the post having multiple photos and click on image
-    And User clicks on image pop up close button
-    Then Image pop up which was opened on clicking should be closed
+#  Scenario Outline: Check that after navigating to next image user is able to open image pop up or not
+#    When User clicks on navigation key <Direction> of the post having multiple photos and click on image
+#    And User clicks on image pop up close button
+#    Then Image pop up which was opened on clicking should be closed
+#    Examples:
+#      | Direction |
+#      | Previous  |
+#      | Next      |
+#
+#  Scenario Outline: Check the working of previous and next buttons of the post having multiple photos and get the complete list to make sure able to navigate to all photos of post
+#    When User clicks on navigation keys to parse the complete list of photo in direction <Direction>
+#    Examples:
+#      | Direction |
+#      | Next      |
+#      | Previous  |
+  Scenario Outline: Check if Name, designation, email Id and mobile number should displayed with Profile photo in self profile
+    When User clicks on profile photo
+    Then User will be navigated to user profile having <Gmail> mail id
+    And All the details of user self profiles is displayed
     Examples:
-      | Direction |
-      | Previous  |
-      | Next      |
+      | Gmail                               |
+      | susheel.mahobia@geminisolutions.com |
 
-  Scenario Outline: Check the working of previous and next buttons of the post having multiple photos and get the complete list to make sure able to navigate to all photos of post
-    When User clicks on navigation keys to parse the complete list of photo in direction <Direction>
-    Examples:
-      | Direction |
-      | Next      |
-      | Previous  |
+  Scenario: Check if Manager section contains photo, Manager's name followed by designation in self profile
+    When User clicks on profile photo
+    Then All the details of Manager of user self profile is displayed
+
+  Scenario: Check if Details section display Birth date,joining date and Hobbies in self profile
+    When User clicks on profile photo
+    Then Birthday , Joining date, Hobbies of self profiles is displayed
+
+  Scenario: Check Skills, Certification, Acheivement,Training , Gemtalk,Projects these fields are present on screen
+    When User clicks on profile photo
+    Then Check for presence of all fields
