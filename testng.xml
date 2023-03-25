@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="All TestCases" data-provider-thread-count="1">
     <test verbose="1" preserve-order="true" name="GemBook">
-        <parameter name="tagName" value="@sanity"/>
         <classes>
             <class name="com.gemini.generic.bdd.GemJarCucumberBase"/>
         </classes>

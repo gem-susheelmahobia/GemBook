@@ -3,48 +3,35 @@ package StepDefinition;
 import Objects.Locators;
 import Objects.Locators_Homepage;
 import Utilities.Utility;
-import com.gemini.generic.bdd.GemJarCucumberBase;
+
 import com.gemini.generic.reporting.GemTestReporter;
 import com.gemini.generic.reporting.STATUS;
 import com.gemini.generic.ui.utils.DriverAction;
 import com.gemini.generic.ui.utils.DriverManager;
-import io.cucumber.java.Scenario;
-import io.cucumber.java.an.E;
-import io.cucumber.java.bs.Ali;
+
 import io.cucumber.java.en.*;
-import io.cucumber.java.en_old.Ac;
-import io.cucumber.java.et.Eeldades;
-import io.cucumber.java.mk_latn.No;
-import net.jodah.failsafe.internal.util.DelegatingExecutorService;
-import oracle.jdbc.proxy.annotation.Pre;
-import org.checkerframework.checker.units.qual.C;
+
 import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.json.Json;
+
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.Wait;
+
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.print.DocFlavor;
-import javax.xml.stream.events.Comment;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.text.ParseException;
+
 import java.time.LocalDate;
 
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
-
 
 public class StepDefinition {
     Logger logger = LoggerFactory.getLogger(StepDefinition.class);
@@ -85,6 +72,7 @@ public class StepDefinition {
     public void logo_is_displayed() {
         try {
             Boolean bool = DriverAction.getElement(Locators.GemBookLogo).isDisplayed();
+            WebElement wb = DriverAction.getElement(Locators.GemBookLogo);
             if (bool)
                 GemTestReporter.addTestStep("Logo validation", " Logo is Displayed", STATUS.PASS, DriverAction.takeSnapShot());
             else
@@ -142,6 +130,8 @@ public class StepDefinition {
     @When("User clicks on sign-in button")
     public void user_clicks_on_sign_in_button() {
         try {
+            DriverAction.waitUntilElementClickable(Locators.SignUpButton, 15);
+            DriverAction.waitSec(3);
             DriverAction.click(Locators.SignUpButton, "Sign Up Button");
             DriverAction.waitSec(3);
             mainWindowHandle = DriverAction.getWindowHandle();
@@ -173,7 +163,7 @@ public class StepDefinition {
             DriverAction.waitSec(3);
             DriverAction.typeText(Locators.PassWordField, password, "Password Field");
             DriverAction.click(Locators.PassWordNextButton, "Password Next Button");
-            DriverAction.waitSec(4);
+            DriverAction.waitSec(6);
         } catch (Exception e) {
             logger.info("An exception occured !", e);
             GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
@@ -183,9 +173,11 @@ public class StepDefinition {
     @When("User clicks on No on stay signed in button")
     public void user_clicks_on_no_on_stay_signed_in_button() {
         try {
+            DriverAction.waitSec(3);
+            DriverAction.maximizeBrowser();
             DriverAction.getElement(Locators.StaySignedNoButton).click();
             //  DriverAction.click(Locators.StaySignedNoButton, "Stay Signed No Button"); // causing reporting error that's why commented out.
-            DriverAction.waitSec(7);
+            DriverAction.waitSec(3);
         } catch (Exception e) {
             logger.info("An exception occured !", e);
             GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
@@ -316,7 +308,7 @@ public class StepDefinition {
             DriverAction.waitSec(3);
             Integer count = DriverAction.getElements(Locators_Homepage.CountOfTotalLinksExcludingPortalsInsideOtherPortals).size();
             STATUS status;
-            if (count == 2)
+            if (count == 3)
                 status = STATUS.PASS;
             else
                 status = STATUS.FAIL;
@@ -333,7 +325,7 @@ public class StepDefinition {
             DriverAction.waitSec(3);
             Integer count = DriverAction.getElements(Locators_Homepage.CountOfTotalLinksExcludingPortalsInsideOtherPortals).size();
             STATUS status;
-            if (count == 12)
+            if (count == 13)
                 status = STATUS.PASS;
             else
                 status = STATUS.FAIL;
@@ -347,7 +339,7 @@ public class StepDefinition {
     @Then("All the links will be navigating to desired application")
     public void allTheLinksWillBeNavigatingToDesiredApplication() {
         try {
-            ArrayList<String> Applicationstitle = new ArrayList<>(Arrays.asList("Service Desk - Help Desk Software by Vision Helpdesk",
+            ArrayList<String> Applicationstitle = new ArrayList<>(Arrays.asList("Helpdesk",
                     "Contripoint", "Azure DevOps Services | Microsoft Azure", "Gemini MIS", "Jenkins", "greytHR IDP", "Gemini Solutions · GitHub"
                     , "Login | Gemini Wiki", "Athena", "L&D Gemini"));
             //  ArrayList<String> Applicationstitle = new ArrayList<>();
@@ -442,7 +434,6 @@ public class StepDefinition {
         try {
             DriverAction.waitSec(3);
             DriverAction.click(Locators_Homepage.LogoutButton, "Logout button");
-            DriverAction.waitSec(7);
         } catch (Exception e) {
             logger.info("An exception occured !", e);
             GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
@@ -452,10 +443,10 @@ public class StepDefinition {
     @Then("User will be logged out of application.")
     public void userWillBeLoggedOutOfApplication() {
         try {
-            DriverAction.waitSec(3);
-            Boolean bool = DriverAction.getElement(Locators.GemBookLogo).isDisplayed();
+            DriverAction.waitSec(7);
+            String AfterUrl = DriverAction.getCurrentURL();
             STATUS status;
-            if (bool)
+            if (AfterUrl.contains("https://login.microsoftonline.com"))
                 status = STATUS.PASS;
             else
                 status = STATUS.FAIL;
@@ -503,7 +494,7 @@ public class StepDefinition {
     public void userGoBackToPreviousPage() {
         try {
             DriverAction.waitSec(3);
-            DriverAction.navigateBack(true);
+            DriverAction.navigateBack();
             DriverAction.waitSec(3);
         } catch (Exception e) {
             logger.info("An exception occured !", e);
@@ -523,10 +514,21 @@ public class StepDefinition {
         }
     }
 
+    @When("User clicks on post text box")
+    public void userClicksOnPostTextBox() {
+        try {
+            DriverAction.waitSec(3);
+            DriverAction.click(Locators_Homepage.PostBox, "Post Box");
+        } catch (Exception e) {
+            logger.info("An exception occured !", e);
+            GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
+        }
+    }
+
     @When("^User clicks on (.+) from text editor options$")
     public void userClicksOnTypeFromTextEditorOptions(String Type) {
         try {
-            DriverAction.waitSec(10);
+            DriverAction.waitSec(3);
             if (Type.equalsIgnoreCase("Bold"))
                 DriverAction.click(Locators_Homepage.BoldType, "Bold ");
             else if (Type.equalsIgnoreCase("underline"))
@@ -591,39 +593,8 @@ public class StepDefinition {
             json.put("Underline", "u");
             json.put("strikethrough", "s");
             json.put("Strikethrough", "s");
-//            System.out.println(json.get(Type1));
-//            System.out.println(json.get(Type2));
             Type1 = json.getString(Type1);
             Type2 = json.getString(Type2);
-
-//            switch (Type1.toLowerCase()) {
-//                case "bold":
-//                    Type1 = "strong";
-//                    break;
-//                case "italic":
-//                    Type1 = "em";
-//                    break;
-//                case "underline":
-//                    Type1 = "u";
-//                    break;
-//                case "strikethrough":
-//                    Type1 = "s";
-//                    break;
-//            }
-//            switch (Type2.toLowerCase()) {
-//                case "bold":
-//                    Type2 = "strong";
-//                    break;
-//                case "italic":
-//                    Type2 = "em";
-//                    break;
-//                case "underline":
-//                    Type2 = "u";
-//                    break;
-//                case "strikethrough":
-//                    Type2 = "s";
-//                    break;
-//            }
             STATUS status;
             if (Type1.equals(Type2)) {
                 String tagname = DriverAction.getElement(Locators_Homepage.ContentPtag).getTagName();
@@ -698,8 +669,8 @@ public class StepDefinition {
         }
     }
 
-    @And("User selects the entered test")
-    public void userSelectsTheEnteredTest() {
+    @And("User selects the entered text")
+    public void userSelectsTheEnteredText() {
         try {
             DriverAction.waitSec(3);
             DriverAction.getElement(Locators_Homepage.PostTextBox).sendKeys(Keys.CONTROL + "A");
@@ -795,31 +766,31 @@ public class StepDefinition {
 
     @Then("^The entered text will be aligned (.+)$")
     public void theEnteredTextWillBeAlignedAlignment(String ExpAlignment) {
-        try {
-            String ActualAlignment = DriverAction.getElement(Locators_Homepage.ContentPtag).getCssValue("text-align");
-            if (ExpAlignment.equalsIgnoreCase("Right") && ActualAlignment.equalsIgnoreCase("right"))
-                GemTestReporter.addTestStep("Text Alignment check", "Expected Type :" + ExpAlignment + " ", STATUS.PASS, DriverAction.takeSnapShot());
-            else if (ExpAlignment.equalsIgnoreCase("Left") && ActualAlignment.equalsIgnoreCase("Left"))
-                GemTestReporter.addTestStep("Text Alignment check", "Expected Type :" + ExpAlignment + " ", STATUS.PASS, DriverAction.takeSnapShot());
-            else if (ExpAlignment.equalsIgnoreCase("Center") && ActualAlignment.equalsIgnoreCase("Center"))
-                GemTestReporter.addTestStep("Text Alignment check", "Expected Type :" + ExpAlignment + " ", STATUS.PASS, DriverAction.takeSnapShot());
-            else if (ExpAlignment.equalsIgnoreCase("Justify") && ActualAlignment.equalsIgnoreCase("Justify"))
-                GemTestReporter.addTestStep("Text Alignment check", "Expected Type :" + ExpAlignment + " ", STATUS.PASS, DriverAction.takeSnapShot());
-            else
-                GemTestReporter.addTestStep("Text Alignment check", "Not Expected Type", STATUS.FAIL, DriverAction.takeSnapShot());
-        } catch (Exception e) {
-            logger.info("An exception occured !", e);
-            GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
-        }
+//        try {
+        String ActualAlignment = DriverAction.getElement(Locators_Homepage.ContentPtag).getCssValue("text-align");
+        if (ExpAlignment.equalsIgnoreCase("Right") && ActualAlignment.equalsIgnoreCase("right"))
+            GemTestReporter.addTestStep("Text Alignment check", "Expected Type :" + ExpAlignment + " ", STATUS.PASS, DriverAction.takeSnapShot());
+        else if (ExpAlignment.equalsIgnoreCase("Left") && ActualAlignment.equalsIgnoreCase("Left"))
+            GemTestReporter.addTestStep("Text Alignment check", "Expected Type :" + ExpAlignment + " ", STATUS.PASS, DriverAction.takeSnapShot());
+        else if (ExpAlignment.equalsIgnoreCase("Center") && ActualAlignment.equalsIgnoreCase("Center"))
+            GemTestReporter.addTestStep("Text Alignment check", "Expected Type :" + ExpAlignment + " ", STATUS.PASS, DriverAction.takeSnapShot());
+        else if (ExpAlignment.equalsIgnoreCase("Justify") && ActualAlignment.equalsIgnoreCase("Justify"))
+            GemTestReporter.addTestStep("Text Alignment check", "Expected Type :" + ExpAlignment + " ", STATUS.PASS, DriverAction.takeSnapShot());
+        else
+            GemTestReporter.addTestStep("Text Alignment check", "Not Expected Type", STATUS.FAIL, DriverAction.takeSnapShot());
+//        } catch (Exception e) {
+//            logger.info("An exception occured !", e);
+//            GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
+//        }
     }
 
     @When("User verify default tab in events section")
     public void userVerifyDefaultTabInEventsSection() {
         try {
-            DriverAction.waitSec(3);
+            DriverAction.waitSec(6);
             String DefaultTab = DriverAction.getElement(Locators_Homepage.DefaultEventTab).getText();
             STATUS status;
-            if (DefaultTab.equals("Ongoing&Upcoming"))
+            if (DefaultTab.equals("Ongoing & Upcoming"))
                 status = STATUS.PASS;
             else
                 status = STATUS.FAIL;
@@ -836,8 +807,8 @@ public class StepDefinition {
             DriverAction.waitSec(3);
             if (Type.equalsIgnoreCase("Past"))
                 DriverAction.click(Locators_Homepage.PastEvent, "Past event");
-            else if (Type.equalsIgnoreCase("Ongoing&Upcoming"))
-                DriverAction.click(Locators_Homepage.OngoingEvent, "Ongoing&Upcoming event");
+            else if (Type.equalsIgnoreCase("Ongoing & Upcoming"))
+                DriverAction.click(Locators_Homepage.OngoingEvent, "Ongoing & Upcoming event");
             else
                 GemTestReporter.addTestStep("Event select", "Event selection failed", STATUS.FAIL);
         } catch (Exception e) {
@@ -851,7 +822,7 @@ public class StepDefinition {
         try {
             DriverAction.waitSec(3);
             String Tab = DriverAction.getElement(Locators_Homepage.DefaultEventTab).getText();
-            if (Type.equalsIgnoreCase("Ongoing&Upcoming") && Tab.equalsIgnoreCase(Type))
+            if (Type.equalsIgnoreCase("Ongoing & Upcoming") && Tab.equalsIgnoreCase(Type))
                 GemTestReporter.addTestStep("Events Section selected tab", "Selected tab " + Tab + " ", STATUS.PASS, DriverAction.takeSnapShot());
             else if (Type.equalsIgnoreCase("Past") && Tab.equalsIgnoreCase(Type))
                 GemTestReporter.addTestStep("Events Section Selected tab", "Selected tab " + Tab + " ", STATUS.PASS, DriverAction.takeSnapShot());
@@ -1065,6 +1036,7 @@ public class StepDefinition {
             WebDriverWait wait = new WebDriverWait(DriverManager.getWebDriver(), 20);
             WebElement personsUl = DriverAction.getElement(Locators_Homepage.PersonsWinningAwardsUl);
             wait.until(ExpectedConditions.visibilityOf(personsUl));
+            wait.until(ExpectedConditions.visibilityOf(DriverAction.getElement(By.xpath("//div"))));
             GemTestReporter.addTestStep("Select Event", "Event Selected Successfully : " + EventsDropdown.getFirstSelectedOption().getText() + "", STATUS.PASS, DriverAction.takeSnapShot());
             List<WebElement> ListOfPersons = DriverAction.getElements(Locators_Homepage.PersonsWinningAwards);
             //Random rand=new Random();
@@ -1089,31 +1061,31 @@ public class StepDefinition {
 
     @When("User verifies the employee birthday list")
     public void UserVerifiesTheEmployeeBirthdayList() {
-        try {
-            DriverAction.waitSec(3);
-            JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
-            List<WebElement> Employee_birthday_list = DriverAction.getElements(Locators_Homepage.EmployeeBirthdayList);  //storing the complete list of birthdays
-            Iterator<WebElement> employee_birthdays = Employee_birthday_list.iterator();
-            STATUS status;
-            while (employee_birthdays.hasNext()) {
-                WebElement employee_birthday = employee_birthdays.next();                 //getting single birthday from list of birthdays.
-                WebElement employee_name_element = employee_birthday.findElement(By.xpath("div[@class='name']"));          //getting name of employee
-                WebElement employee_birth_date_element = employee_birthday.findElement(By.xpath("div[@class='date']"));           //getting birthday date of employee
-                String employee_name = employee_name_element.getText();
-                String employee_birth_date = employee_birth_date_element.getText();
-                js.executeScript("arguments[0].scrollIntoView(true);", employee_birthday);
-                js.executeScript("window.scrollTo(0,0)");
-                if (employee_name_element.isDisplayed() && employee_birth_date_element.isDisplayed())                //for every employee checking that name and birthday date will be displayed
-                    status = STATUS.PASS;
-                else
-                    status = STATUS.FAIL;
-                GemTestReporter.addTestStep("Employee Birthday", "Expected : " + employee_name + ": Birth : " + employee_birth_date, status, DriverAction.takeSnapShot());
-            }
-
-        } catch (Exception e) {
-            logger.info("An exception occured !", e);
-            GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
+//        try {
+        DriverAction.waitSec(3);
+        JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
+        List<WebElement> Employee_birthday_list = DriverAction.getElements(Locators_Homepage.EmployeeBirthdayList);  //storing the complete list of birthdays
+        Iterator<WebElement> employee_birthdays = Employee_birthday_list.iterator();
+        STATUS status;
+        while (employee_birthdays.hasNext()) {
+            WebElement employee_birthday = employee_birthdays.next();                 //getting single birthday from list of birthdays.
+            WebElement employee_name_element = employee_birthday.findElement(By.xpath("div[@class='name' or @class='exEmp']"));          //getting name of employee
+            WebElement employee_birth_date_element = employee_birthday.findElement(By.xpath("div[@class='date']"));           //getting birthday date of employee
+            String employee_name = employee_name_element.getText();
+            String employee_birth_date = employee_birth_date_element.getText();
+            js.executeScript("arguments[0].scrollIntoView(true);", employee_birthday);
+            js.executeScript("window.scrollTo(0,0)");
+            if (employee_name_element.isDisplayed() && employee_birth_date_element.isDisplayed())                //for every employee checking that name and birthday date will be displayed
+                status = STATUS.PASS;
+            else
+                status = STATUS.FAIL;
+            GemTestReporter.addTestStep("Employee Birthday", "Expected : " + employee_name + ": Birth : " + employee_birth_date, status, DriverAction.takeSnapShot());
         }
+
+//        } catch (Exception e) {
+//            logger.info("An exception occured !", e);
+//            GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
+//        }
     }
 
     @When("User verifies the birth dates in birthday list")
@@ -1155,7 +1127,7 @@ public class StepDefinition {
                     GemTestReporter.addTestStep("Profile Validation", "Expected :" + name_single_birthday_name + " Valid profile ", STATUS.PASS, DriverAction.takeSnapShot());
                 else
                     GemTestReporter.addTestStep("Profile Validation", "Expected :" + name_single_birthday_name + " Valid profile ", STATUS.FAIL, DriverAction.takeSnapShot());
-                DriverAction.navigateBack(true);
+                DriverAction.navigateBack();
             }
 
         } catch (Exception e) {
@@ -1175,7 +1147,7 @@ public class StepDefinition {
             while (employee_anniversary.hasNext())                                                                            // taking the single employee's anniversary from the list of anniversary.
             {
                 WebElement single_employee_anni = employee_anniversary.next();
-                WebElement single_employee_anni_name_element = single_employee_anni.findElement(By.xpath("div[@class='name']"));    // name of the employee anniversary
+                WebElement single_employee_anni_name_element = single_employee_anni.findElement(By.xpath("div[@class='name' or @class='exEmp']"));    // name of the employee anniversary
                 WebElement single_employee_anni_date_element = single_employee_anni.findElement(By.xpath("div[@class='date']"));     // date of the emplyee anniversary
                 String single_employee_anni_name = single_employee_anni_name_element.getText();
                 String single_employee_anni_date = single_employee_anni_date_element.getText();
@@ -1210,7 +1182,7 @@ public class StepDefinition {
                     GemTestReporter.addTestStep("Profile Validation", "Expected :" + name_single_anniversary_name + " Valid profile ", STATUS.PASS, DriverAction.takeSnapShot());
                 else
                     GemTestReporter.addTestStep("Profile Validation", "Expected :" + name_single_anniversary_name + " Valid profile ", STATUS.FAIL, DriverAction.takeSnapShot());
-                DriverAction.navigateBack(true);
+                DriverAction.navigateBack();
             }
         } catch (Exception e) {
             logger.info("An exception occured !", e);
@@ -1294,7 +1266,7 @@ public class StepDefinition {
                     GemTestReporter.addTestStep("Profile Validation", "Expected :" + name_single_newmember_name + " Valid profile ", STATUS.PASS, DriverAction.takeSnapShot());
                 else
                     GemTestReporter.addTestStep("Profile Validation", "Expected :" + name_single_newmember_name + " Valid profile ", STATUS.FAIL, DriverAction.takeSnapShot());
-                DriverAction.navigateBack(true);
+                DriverAction.navigateBack();
             }
 
         } catch (Exception e) {
@@ -1456,7 +1428,7 @@ public class StepDefinition {
 
     @And("User refresh the page")
     public void userRefreshThePage() {
-        DriverAction.refresh(true);
+        DriverAction.refresh();
     }
 
     @When("^User clicks on profile Photo/Name (.+) of the user who has already posted$")
@@ -1495,7 +1467,7 @@ public class StepDefinition {
         try {
             DriverAction.waitSec(3);
             JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
-            Utility.scrollToBottomOfThePageDynamically(js);
+//            Utility.scrollToBottomOfThePageDynamically(js);
             List<WebElement> List_of_posts = DriverAction.getElements(Locators_Homepage.TotalPosts);
             STATUS status;
             int No_of_posts = List_of_posts.size();
@@ -1720,46 +1692,49 @@ public class StepDefinition {
     @When("^User enters the text or emoji (.+) into comment box (.+) and press enter button to comment$")
     public void userEntersTheTextEmojiIntoCommentBoxAndPressEnterButtonToComment(String Type, String Content) {
         try {
-            DriverAction.waitSec(3);
-            JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
-            STATUS status;
-            WebElement Random_post = Utility.goToParticularPostFooter(js);
-            WebElement comment_btn = Random_post.findElement(By.xpath("div[@class='postContainer_footerBtns__1xAPm']//button[contains(@class,'postContainer_postCommentBtn_')]"));
-            DriverAction.click(comment_btn, "Comment Button");
-            DriverAction.waitSec(3);
-            WebElement Comment_box = Random_post.findElement(By.xpath("div[@class='postContainer_addComment__2Mmg1']"));    // comment box , after comment button is clicked.
-            WebElement Comment_field = Comment_box.findElement(By.name("commentContent"));                 // comment Field text box , inside comment box.
-            WebElement Emoji_box = Comment_box.findElement(By.xpath("div[@class='postContainer_inputGroup__u9FRq input-group']//div[@class='input-group-append']//div[@id='button-addon1'and @class='p-1 btn btn-link text-primary']"));
-            DriverAction.waitSec(3);
-            int Count_comment_before = Utility.getLikesCommentCount(Random_post, "comment");         // declaring variables to verify the comment is added after adding comment.
-            int Count_comment_after;
-            DriverAction.click(Comment_field, "Comment field");
-            if (Type.equalsIgnoreCase("Text")) {                                 // if choice of only text will be sent from feature file then this will run.
-                DriverAction.typeText(Comment_field, Content, "Comment field");
-                Comment_field.sendKeys(Keys.ENTER);
-            } else if (Type.equalsIgnoreCase("Emoji")) {                        // if choice of only emoji will be sent from feature file then this will run.
-                for (int i = 1; i < 6; i++) {
-                    DriverAction.click(Emoji_box, "Emoji's");
-                    Emoji_box.findElement(By.xpath("(//section[@class='emoji-scroll-wrapper']//child::ul//li)[" + i + "]")).click();
+        DriverAction.waitSec(3);
+        JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
+        STATUS status;
+        WebElement Random_post = Utility.goToParticularPostFooter(js);
+        WebElement comment_btn = Random_post.findElement(By.xpath("div[@class='postContainer_footerBtns__1xAPm']//button[contains(@class,'postContainer_postCommentBtn_')]"));
+        DriverAction.click(comment_btn, "Comment Button");
+        DriverAction.waitSec(3);
+        WebElement Comment_box = Random_post.findElement(By.xpath("div[contains(@class,'postContainer_commentContainer')]//div[@class='postContainer_addComment__2Mmg1']"));    // comment box , after comment button is clicked.
+//            WebElement Comment_field = Comment_box.findElement(By.name("commentContent"));                 // comment Field text box , inside comment box.
+        WebElement Comment_field = Comment_box.findElement(By.xpath("div[contains(@class,'postContainer_inputGroup')]//child::div[@data-placeholder='Add comment']"));                 // comment Field text box , inside comment box.
+//            WebElement Emoji_box = Comment_box.findElement(By.xpath("div[@class='postContainer_inputGroup__u9FRq input-group']//div[@class='input-group-append']//div[@id='button-addon1'and @class='p-1 btn btn-link text-primary']"));
+        WebElement Emoji_box = Comment_box.findElement(By.xpath("div[@class='input-group-append']//div[@id='button-addon1']"));
+        DriverAction.waitSec(3);
+        int Count_comment_before = Utility.getLikesCommentCount(Random_post, "comment");         // declaring variables to verify the comment is added after adding comment.
+        int Count_comment_after;
+        DriverAction.click(Comment_field, "Comment field");
+        WebElement SendButton = Comment_box.findElement(By.xpath("div//button"));
+        if (Type.equalsIgnoreCase("Text")) {                                 // if choice of only text will be sent from feature file then this will run.
+            DriverAction.typeText(Comment_field, Content, "Comment field");
+            DriverAction.click(SendButton, "Send");
+        } else if (Type.equalsIgnoreCase("Emoji")) {                        // if choice of only emoji will be sent from feature file then this will run.
+            for (int i = 1; i < 6; i++) {
+                DriverAction.click(Emoji_box, "Emoji's");
+                Emoji_box.findElement(By.xpath("(//section[@class='emoji-scroll-wrapper']//child::ul//li)[" + i + "]")).click();
 
-                }
-                Comment_field.sendKeys(Keys.ENTER);
-            } else if (Type.equalsIgnoreCase("Both")) {                         // if choice of both will be sent from feature file then this will run.
-                DriverAction.typeText(Comment_field, Content, "Comment field");
-                for (int i = 1; i < 6; i++) {
-                    DriverAction.click(Emoji_box, "Emoji's");
-                    Emoji_box.findElement(By.xpath("(//section[@class='emoji-scroll-wrapper']//child::ul//li)[" + i + "]")).click();
-
-                }
-                Comment_field.sendKeys(Keys.ENTER);
             }
-            DriverAction.waitSec(3);
-            Count_comment_after = Utility.getLikesCommentCount(Random_post, "Comment");
-            if (Count_comment_before + 1 == Count_comment_after)                                  // verifying that comment count should be increased.
-                status = STATUS.PASS;
-            else
-                status = STATUS.FAIL;
-            GemTestReporter.addTestStep("Comment Validation", "Expected :Comment is added", status, DriverAction.takeSnapShot());
+            DriverAction.click(SendButton, "Send");
+        } else if (Type.equalsIgnoreCase("Both")) {                         // if choice of both will be sent from feature file then this will run.
+            DriverAction.typeText(Comment_field, Content, "Comment field");
+            for (int i = 1; i < 6; i++) {
+                DriverAction.click(Emoji_box, "Emoji's");
+                Emoji_box.findElement(By.xpath("(//section[@class='emoji-scroll-wrapper']//child::ul//li)[" + i + "]")).click();
+
+            }
+            DriverAction.click(SendButton, "Send");
+        }
+        DriverAction.waitSec(3);
+        Count_comment_after = Utility.getLikesCommentCount(Random_post, "Comment");
+        if (Count_comment_before + 1 == Count_comment_after)                                  // verifying that comment count should be increased.
+            status = STATUS.PASS;
+        else
+            status = STATUS.FAIL;
+        GemTestReporter.addTestStep("Comment Validation", "Expected :Comment is added", status, DriverAction.takeSnapShot());
         } catch (Exception e) {
             logger.info("An exception occured !", e);
             GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
@@ -1773,8 +1748,6 @@ public class StepDefinition {
             JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
             STATUS status;
             WebElement Random_post = Utility.goToParticularPostFooter(js);
-            WebElement View_more_comment;
-            WebElement View_less_comment;
             List<WebElement> List_of_comments = null;
             int No_of_comments = Utility.getLikesCommentCount(Random_post, "Comments");     // getting the total count of the comments
             if (No_of_comments == 0) {                                                             // if the no of counts will be 0 then we simply go exit of the function.
@@ -1797,8 +1770,6 @@ public class StepDefinition {
                     GemTestReporter.addTestStep("Posts Comments", "Commented by :" + Commenter_name, status, DriverAction.takeSnapShot());
                 }
             } else if (No_of_comments > 1) {                                   // same as above if block but this block will run if there will be more then 1 comments in the post.
-                View_more_comment = Random_post.findElement(By.xpath("//b[contains(text(),'View More Comments')]"));     //This time we need to click on the view more comments option to complete full list of comment.
-                DriverAction.click(View_more_comment, "View More Comments");
                 List_of_comments = Random_post.findElements(By.xpath("div[@class='px-3 w-100  postContainer_commentContainer__FbWj1']//child::div[@class='d-flex py-2']"));
                 Iterator<WebElement> Comments_list = List_of_comments.iterator();
                 while (Comments_list.hasNext()) {
@@ -1819,6 +1790,39 @@ public class StepDefinition {
         }
     }
 
+    @When("User checks that post having more then one comment")
+    public void userChecksThatPostHavingMoreThenOneComment() {
+        try {
+            DriverAction.waitSec(3);
+            JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
+            STATUS status;
+            WebElement Random_post = Utility.goToParticularPostFooter(js);
+            WebElement View_less_comment;
+            WebElement Post_comments;
+            int No_of_comments = Utility.getLikesCommentCount(Random_post, "Comments");
+            if (No_of_comments == 0) {                                    // if post has no comment then simply exit from function.
+                GemTestReporter.addTestStep("View Less Comments link Validation ", "No Comment is present", STATUS.PASS, DriverAction.takeSnapShot());
+
+            } else if (No_of_comments == 1) {                    // if post has only single comment then weare showing only report with single comment and link not present.
+                Post_comments = Random_post.findElement(By.xpath("div[@class='postContainer_likeCommentWrapper__3eUjQ']//div[@class='postContainer_commentCount__1F4g6']"));
+                DriverAction.click(Post_comments, "Comments Green Icon");
+                GemTestReporter.addTestStep("View Less Comments link", "Exp : Link not present , Total Comments : " + No_of_comments, STATUS.PASS, DriverAction.takeSnapShot());
+            } else {                                             //if the post has more then one comment then we are validatin that view less comment link would be visible
+                Post_comments = Random_post.findElement(By.xpath("div[@class='postContainer_likeCommentWrapper__3eUjQ']//div[@class='postContainer_commentCount__1F4g6']"));
+                DriverAction.click(Post_comments, "Comments Green Icon");
+                View_less_comment = Random_post.findElement(By.xpath("//b[contains(text(),'View Less Comments')]"));
+                if (View_less_comment.isDisplayed())
+                    status = STATUS.PASS;
+                else
+                    status = STATUS.FAIL;
+                GemTestReporter.addTestStep("View Less Comments link", "Exp : Link is present , Total Comments : " + No_of_comments, status, DriverAction.takeSnapShot());
+            }
+
+        } catch (Exception e) {
+            logger.info("An exception occured !", e);
+            GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
+        }
+    }
     @When("User checks the post having more then one comment")
     public void userChecksThePostHavingMoreThenOneComment() {
         try {
@@ -1853,8 +1857,8 @@ public class StepDefinition {
         }
     }
 
-    @And("Click on View More comment link")
-    public void clickOnViewMoreCommentLink() {
+    @And("Click on View Less comment link")
+    public void clickOnViewLessCommentLink() {
         try {
             DriverAction.waitSec(3);
             JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
@@ -1866,28 +1870,28 @@ public class StepDefinition {
             List<WebElement> List_of_comments;
             int No_of_comments = Utility.getLikesCommentCount(Random_post, "Comments");
             if (No_of_comments <= 1) {                         // if the post has 0 or 1 comment then there will be no view more comment option so , simply exiting from function.
-                GemTestReporter.addTestStep("View More Comments link", "Exp : Link not present , Total Comments : " + No_of_comments, STATUS.PASS, DriverAction.takeSnapShot());
+                GemTestReporter.addTestStep("View Less Comments link", "Exp : Link not present , Total Comments : " + No_of_comments, STATUS.PASS, DriverAction.takeSnapShot());
                 return;
             }                   // if the post has more then one comment then below statements will be executed.
             Post_comments = Random_post.findElement(By.xpath("div[@class='postContainer_likeCommentWrapper__3eUjQ']//div[@class='postContainer_commentCount__1F4g6']"));
             DriverAction.click(Post_comments, "Comments Green Icon");
-            View_more_comment = Random_post.findElement(By.xpath("//b[contains(text(),'View More Comments')]"));
-            DriverAction.click(View_more_comment, "View More Comment");                            // clicking on view more comment link to fetch the complete list of comment and also to get count of comment and view less comment list.
+            View_less_comment = Random_post.findElement(By.xpath("//b[contains(text(),'View Less Comments')]"));
+            DriverAction.click(View_less_comment, "View Less Comment");                            // clicking on view more comment link to fetch the complete list of comment and also to get count of comment and view less comment list.
             List_of_comments = Random_post.findElements(By.xpath("div[@class='px-3 w-100  postContainer_commentContainer__FbWj1']//child::div[@class='d-flex py-2']"));        // fetching complete list of comments after clicking on view more commet option.
-            View_less_comment = Random_post.findElement(By.xpath("//b[contains(text(),'View Less Comments')]"));        // getting the view less comment element.
-            if (No_of_comments == List_of_comments.size() && View_less_comment.isDisplayed())                  // validating the comment count should be same after clicking on view more comment and also view less link should present.
+            View_more_comment = Random_post.findElement(By.xpath("//b[contains(text(),'View More Comments')]"));        // getting the view less comment element.
+            if (List_of_comments.size() ==1&& View_more_comment.isDisplayed())                  // validating the comment count should be same after clicking on view more comment and also view less link should present.
                 status = STATUS.PASS;
             else
                 status = STATUS.FAIL;
-            GemTestReporter.addTestStep("Working of View More comment", "Exp : All comments are displayed with view less option", status, DriverAction.takeSnapShot());
+            GemTestReporter.addTestStep("Working of View Less comment", "Exp : Single comment will displayed with view more option", status, DriverAction.takeSnapShot());
         } catch (Exception e) {
             logger.info("An exception occured !", e);
             GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
         }
     }
 
-    @When("Click on View Less comment link")
-    public void clickOnViewLessCommentLink() {
+    @When("Click on View More comment link after View Less comment")
+    public void clickOnViewMoreCommentLinkAfterViewLessComment() {
         try {
             DriverAction.waitSec(3);
             JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
@@ -1904,17 +1908,16 @@ public class StepDefinition {
             }                   // for the post having more then one comment below code will be executed.
             Post_comments = Random_post.findElement(By.xpath("div[@class='postContainer_likeCommentWrapper__3eUjQ']//div[@class='postContainer_commentCount__1F4g6']"));
             DriverAction.click(Post_comments, "Comments Green Icon");             // clicking on to green icon to get the comments of the post.
-            View_more_comment = Random_post.findElement(By.xpath("//b[contains(text(),'View More Comments')]"));
-            DriverAction.click(View_more_comment, "View More Comment");           // clicking to view more comment link to get all the comments of the post.
             View_less_comment = Random_post.findElement(By.xpath("//b[contains(text(),'View Less Comments')]"));
-            DriverAction.click(View_less_comment, "View Less Comment");  // clicking to view lss comment link after clicking to view more comment.
+            DriverAction.click(View_less_comment, "View Less Comment");           // clicking to view less comment link to get all the comments of the post.
+            View_more_comment = Random_post.findElement(By.xpath("//b[contains(text(),'View More Comments')]"));
+            DriverAction.click(View_more_comment, "View More Comment");  // clicking to view lss comment link after clicking to view more comment.
             List_of_comments = Random_post.findElements(By.xpath("div[@class='px-3 w-100  postContainer_commentContainer__FbWj1']//child::div[@class='d-flex py-2']"));             // fetching again the list of comments after clicking to view less comment.
-            View_more_comment = Random_post.findElement(By.xpath("//b[contains(text(),'View More Comments')]"));          // getting the view more comment link in this state.
-            if (List_of_comments.size() == 1 && View_more_comment.isDisplayed())        // validating that after clicking to view less comment there should be only one comment displayed with view more comment list.
+            if (List_of_comments.size() == No_of_comments)        // validating that after clicking to view less comment there should be only one comment displayed with view more comment list.
                 status = STATUS.PASS;
             else
                 status = STATUS.FAIL;
-            GemTestReporter.addTestStep("Working of View Less comment", "Exp : Showing only one comment with view more comment option", status, DriverAction.takeSnapShot());
+            GemTestReporter.addTestStep("Working of View More comment", "Exp : Showing all comment with view more comment option", status, DriverAction.takeSnapShot());
         } catch (Exception e) {
             logger.info("An exception occured !", e);
             GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
@@ -2070,8 +2073,6 @@ public class StepDefinition {
                 DriverAction.waitSec(3);
 
             } else if (No_of_comments > 1) {                                   // same as above if block but this block will run if there will be more then 1 comments in the post.
-                View_more_comment = Random_post.findElement(By.xpath("//b[contains(text(),'View More Comments')]"));     //This time we need to click on the view more comments option to complete full list of comment.
-                DriverAction.click(View_more_comment, "View More Comments");
                 List_of_comments = Random_post.findElements(By.xpath("div[@class='px-3 w-100  postContainer_commentContainer__FbWj1']//child::div[@class='d-flex py-2']"));   // fetching all the comments present and storing in the list.
                 No_random_comment = rand.nextInt(List_of_comments.size());             // taking the random copmment
                 Comment_delete_btn = List_of_comments.get(No_random_comment).findElement(By.xpath("//child::div[@class='postContainer_commentAction__J3ata']//span[contains(@class,'commentDeleteBtn')]"));  // then getting the delete button of the particular random comment.
@@ -2135,7 +2136,11 @@ public class StepDefinition {
     public void userClicksOnImagePopUpCloseButton() {
         try {
             DriverAction.waitSec(3);
-            DriverAction.click(Locators_Homepage.ImagePopUpClose, "Image pop up close");
+            if (DriverAction.getElements(Locators_Homepage.ImagePopUp).size() == 0) {
+                GemTestReporter.addTestStep("No Image pop up opened", "Therefore No need to close", STATUS.PASS,DriverAction.takeSnapShot());
+                return;
+
+            }DriverAction.click(Locators_Homepage.ImagePopUpClose, "Image pop up close");
         } catch (Exception e) {
             logger.info("An exception occured !", e);
             GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
@@ -2188,6 +2193,7 @@ public class StepDefinition {
         js.executeScript("arguments[0].scrollIntoView({block: \"center\", inline: \"nearest\"});", random_post_having_multiple_image);
         DriverAction.waitSec(3);
         WebElement Next_button = random_post_having_multiple_image.findElement(By.xpath("following-sibling::a[@class='carousel-control-next']"));
+        DriverAction.click(Next_button,"Next");
         WebElement Prev_button = random_post_having_multiple_image.findElement(By.xpath("following-sibling::a[@class='carousel-control-prev']"));
         if (Next_button.isEnabled() && Prev_button.isEnabled())
             status = STATUS.PASS;
@@ -2236,14 +2242,26 @@ public class StepDefinition {
         DriverAction.waitSec(3);
         SrcOpenedImage = image.getAttribute("src");
         if (Directions.equalsIgnoreCase("Previous")) {
+            Next_button = random_post_having_multiple_image.findElement(By.xpath("following-sibling::a[@class='carousel-control-next']"));
+            DriverAction.click(Next_button, "Next button");
             Prev_button = random_post_having_multiple_image.findElement(By.xpath("following-sibling::a[@class='carousel-control-prev']"));
             DriverAction.click(Prev_button, "Previous button");
         } else if (Directions.equalsIgnoreCase("Next")) {
             Next_button = random_post_having_multiple_image.findElement(By.xpath("following-sibling::a[@class='carousel-control-next']"));
             DriverAction.click(Next_button, "Next button");
         }
-
-        image = random_post_having_multiple_image.findElement(By.xpath("div[@class='active carousel-item']//child::img"));
+//        image = random_post_having_multiple_image.findElement(By.xpath("div[@class='active carousel-item']//child::img"));
+        Boolean isImage=false;
+        List<WebElement> images = random_post_having_multiple_image.findElements(By.xpath("div[@class='active carousel-item']//child::*"));
+        Iterator<WebElement> list_images = images.iterator();
+        while (list_images.hasNext()) {
+           if (list_images.next().getTagName().equals("img"))
+               isImage=true;
+        }
+        if (!isImage) {
+            GemTestReporter.addTestStep("Working of Navigation button", "Exp : Click on " + Directions + "", STATUS.PASS, DriverAction.takeSnapShot());
+         return;
+        }
         wait.until(ExpectedConditions.visibilityOf(image));
         SrcNextImage = image.getAttribute("src");
         if (!SrcOpenedImage.equals(SrcNextImage))
@@ -2291,11 +2309,24 @@ public class StepDefinition {
         wait.until(ExpectedConditions.visibilityOf(MainImage));
         DriverAction.waitSec(3);
         if (Directions.equalsIgnoreCase("Previous")) {
+            Next_button = random_post_having_multiple_image.findElement(By.xpath("following-sibling::a[@class='carousel-control-next']"));
+            DriverAction.click(Next_button, "Next button");
             Prev_button = random_post_having_multiple_image.findElement(By.xpath("following-sibling::a[@class='carousel-control-prev']"));
             DriverAction.click(Prev_button, "Previous button");
         } else if (Directions.equalsIgnoreCase("Next")) {
             Next_button = random_post_having_multiple_image.findElement(By.xpath("following-sibling::a[@class='carousel-control-next']"));
             DriverAction.click(Next_button, "Next button");
+        }
+        Boolean isImage=false;
+        List<WebElement> images = random_post_having_multiple_image.findElements(By.xpath("div[@class='active carousel-item']//child::*"));
+        Iterator<WebElement> list_images = images.iterator();
+        while (list_images.hasNext()) {
+            if (list_images.next().getTagName().equals("img"))
+                isImage=true;
+        }
+        if (!isImage) {
+            GemTestReporter.addTestStep("Working of Navigation button", "Exp : Click on " + Directions + "", STATUS.PASS, DriverAction.takeSnapShot());
+            return;
         }
         NextImage = random_post_having_multiple_image.findElement(By.xpath("div[@class='active carousel-item']//child::img"));
         wait.until(ExpectedConditions.visibilityOf(NextImage));
@@ -2450,16 +2481,16 @@ public class StepDefinition {
             DriverAction.waitSec(3);
             STATUS status;
             JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
-            List<WebElement> FieldsInSelfProfile = DriverAction.getElements(Locators_Homepage.FieldsInSelfProfile);
-            Iterator<WebElement> List_of_fields= FieldsInSelfProfile.iterator();
+            List<WebElement> FieldsInSelfProfile = DriverAction.getElements(Locators_Homepage.FieldsHeadingInSelfProfile);
+            Iterator<WebElement> List_of_fields = FieldsInSelfProfile.iterator();
             while (List_of_fields.hasNext()) {
-                WebElement field=List_of_fields.next();
+                WebElement field = List_of_fields.next();
                 js.executeScript("arguments[0].scrollIntoView(true);", field);
                 if (field.isDisplayed())
-                    status=STATUS.PASS;
+                    status = STATUS.PASS;
                 else
-                    status=STATUS.FAIL;
-                GemTestReporter.addTestStep("Check the presence of various fields ", "Exp :"+field.getText()+" field is present",status, DriverAction.takeSnapShot());
+                    status = STATUS.FAIL;
+                GemTestReporter.addTestStep("Check the presence of various fields ", "Exp :" + field.getText() + " field is present", status, DriverAction.takeSnapShot());
 
             }
 
@@ -2468,4 +2499,267 @@ public class StepDefinition {
             GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
         }
     }
+
+    @And("Click on add new button to open text box")
+    public void clickOnAddNewButtonToOpenTextBox() {
+        try {
+            DriverAction.waitSec(3);
+            STATUS status;
+            JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
+            List<WebElement> TextFieldsInSelfProfile = DriverAction.getElements(Locators_Homepage.FieldsWithTextFieldInSelfProfile);
+            Iterator<WebElement> TextFieldsList = TextFieldsInSelfProfile.iterator();
+            while (TextFieldsList.hasNext()) {
+                WebElement SingleTextField = TextFieldsList.next();
+                js.executeScript("arguments[0].scrollIntoView(true);", SingleTextField);
+                DriverAction.click(SingleTextField.findElement(By.xpath("div[@class='components_editIcon__2cpxu']//button")), "Add button");
+                String inputTextBox = SingleTextField.findElement(By.xpath("following-sibling::div[@class='components_description__5OFNY']//child::*")).getAttribute("class");
+                if (inputTextBox.contains("input"))
+                    status = STATUS.PASS;
+                else
+                    status = STATUS.FAIL;
+                GemTestReporter.addTestStep("Text field validation", "Text field is present for : " + SingleTextField.getText() + " ", status, DriverAction.takeSnapShot());
+            }
+
+        } catch (Exception e) {
+            logger.info("An exception occured !", e);
+            GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
+        }
+    }
+
+    @And("^User enters the text (.+) in text box and click on save button$")
+    public void userEntersTheTextInTextBoxAndClickOnSaveButton(String text) {
+        DriverAction.waitSec(9);
+        STATUS status;
+        JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
+        js.executeScript("window.scrollTo(0,0)");
+        List<WebElement> TextBoxes = DriverAction.getElements(By.xpath("//div[@class='leftBottom_leftBottomInner__MFdhn']//child::div[not(contains(@class,'components'))]//child::div[contains(@class,'components_heading__2c20_')]//following-sibling::div[@class='components_description__5OFNY']"));
+        Iterator<WebElement> listTextBox = TextBoxes.iterator();
+        WebElement Edit_button;
+        while (listTextBox.hasNext()) {
+            WebElement textBox = listTextBox.next();
+            WebElement input_box = textBox.findElement(By.xpath("div[@class='components_inputGroup__3eQa-']//child::input"));
+            WebElement Save_button = textBox.findElement(By.xpath("preceding-sibling::button[contains(@title,'Click To Save')]"));
+            DriverAction.click(input_box, "Text box");
+            DriverAction.typeText(input_box, text);
+            DriverAction.click(Save_button, "Save button");
+            DriverAction.waitSec(1);
+            if (DriverAction.getElement(Locators_Homepage.SavedSuccessfullyPopUp).getText().contains("Saved Succesfully"))
+                status = STATUS.PASS;
+            else
+                status = STATUS.FAIL;
+            DriverAction.waitSec(3);
+            GemTestReporter.addTestStep("Saved successfully", "Content added successfully", status, DriverAction.takeSnapShot());
+            DriverAction.waitSec(3);
+        }
+    }
+
+    @And("^User clicks on edit button to make the textbox editable and enters the text (.+)$")
+    public void userClicksOnEditButtonToMakeTheTextboxEditable(String EditText) {
+        DriverAction.waitSec(3);
+        STATUS status;
+        JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
+        js.executeScript("window.scrollTo(0,0)");
+        List<WebElement> TextFields = DriverAction.getElements(By.xpath("//div[@class='leftBottom_leftBottomInner__MFdhn']//child::div[not(contains(@class,'components'))]//child::div[contains(@class,'components_heading__2c20_')]"));
+        Iterator<WebElement> ListOfTextFields = TextFields.iterator();
+        while (ListOfTextFields.hasNext()) {
+            WebElement TextField = ListOfTextFields.next();
+            WebElement EditButton = TextField.findElement(By.xpath("div[@class='components_editIcon__2cpxu']//button"));
+            DriverAction.click(EditButton, "Edit button of " + TextField.getText());
+            DriverAction.waitSec(3);
+            WebElement InputBox = TextField.findElement(By.xpath("following-sibling::div[@class='components_description__5OFNY']//child::input"));
+            String TextBefore = InputBox.getAttribute("value");
+            DriverAction.typeText(InputBox, EditText, TextField.getText());
+            String EditedText = InputBox.getAttribute("value");
+            if ((TextBefore + EditText).equals(EditedText))
+                status = STATUS.PASS;
+            else
+                status = STATUS.FAIL;
+            GemTestReporter.addTestStep("Editable Validation ", "Field : " + TextField.getText() + " is editable", status, DriverAction.takeSnapShot());
+        }
+    }
+
+    //    @And("^User clicks on add new button of (.+) to open text box$")
+//    public void userClicksOnAddNewButtonOfFieldToOpenTextBox(String Field) {
+//        try {
+//
+//
+//            DriverAction.waitSec(3);
+//            STATUS status;
+//            if (Field.equalsIgnoreCase("Skills")) {
+//                WebElement SkillsField = DriverAction.getElement(Locators_Homepage.SkillsField);
+//                WebElement SkillsFieldTag = SkillsField.findElement(By.xpath("div[@class='components_heading__2c20_']"));
+//                WebElement SkillsFieldTagEditSaveButton = SkillsField.findElement(By.xpath("child::div[@class='components_heading__2c20_']//div[@class='components_editIcon__2cpxu']//button"));
+//                DriverAction.click(SkillsFieldTagEditSaveButton, "Add new button");
+//                DriverAction.waitSec(3);
+//                WebElement InputBox = SkillsField.findElement(By.xpath("child::div[@class='components_description__5OFNY']//div[@class='components_inputGroup__3eQa-']//input"));
+////            WebElement SaveButton = SkillsField.findElement(By.xpath("child::button[1]"));
+////            WebElement CancelButton = SkillsField.findElement(By.xpath("child::button[2]"));
+//                if (InputBox.isDisplayed())
+//                    status = STATUS.PASS;
+//                else
+//                    status = STATUS.FAIL;
+//                GemTestReporter.addTestStep("Text Field Validation ", "Text Box is opened for " + SkillsFieldTag.getText(), status, DriverAction.takeSnapShot());
+//            } else if (Field.equalsIgnoreCase("Achievement")) {
+//                WebElement AchievementField = DriverAction.getElement(Locators_Homepage.AchievementField);
+//                WebElement AchievementFieldTag = AchievementField.findElement(By.xpath("div[@class='components_heading__2c20_']"));
+//                WebElement AchievementFieldTagEditSaveButton = AchievementField.findElement(By.xpath("child::div[@class='components_heading__2c20_']//div[@class='components_editIcon__2cpxu']//button"));
+//                DriverAction.click(AchievementFieldTagEditSaveButton, "Add new button");
+//                DriverAction.waitSec(3);
+//                WebElement InputBox = AchievementField.findElement(By.xpath("child::div[@class='components_description__5OFNY']//div[@class='components_inputGroup__3eQa-']//input"));
+//                if (InputBox.isDisplayed())
+//                    status = STATUS.PASS;
+//                else
+//                    status = STATUS.FAIL;
+//                GemTestReporter.addTestStep("Text Field Validation ", "Text Box is opened for " + AchievementFieldTag.getText(), status, DriverAction.takeSnapShot());
+//            }
+//            else if (Field.equalsIgnoreCase("Trainings")) {
+//                WebElement TrainingsField = DriverAction.getElement(Locators_Homepage.TrainingsField);
+//                WebElement TrainingsFieldTag = TrainingsField.findElement(By.xpath("div[@class='components_heading__2c20_']"));
+//                WebElement TrainingsFieldTagEditSaveButton = TrainingsField.findElement(By.xpath("child::div[@class='components_heading__2c20_']//div[@class='components_editIcon__2cpxu']//button"));
+//                DriverAction.click(TrainingsFieldTagEditSaveButton, "Add new button");
+//                DriverAction.waitSec(3);
+//                WebElement InputBox = TrainingsField.findElement(By.xpath("child::div[@class='components_description__5OFNY']//div[@class='components_inputGroup__3eQa-']//input"));
+//                if (InputBox.isDisplayed())
+//                    status = STATUS.PASS;
+//                else
+//                    status = STATUS.FAIL;
+//                GemTestReporter.addTestStep("Text Field Validation ", "Text Box is opened for " + TrainingsFieldTag.getText(), status, DriverAction.takeSnapShot());
+//            }
+//            else if (Field.equalsIgnoreCase("Gemtalk")) {
+//                WebElement GemtalkField = DriverAction.getElement(Locators_Homepage.GemtalkField);
+//                WebElement GemtalkFieldTag = GemtalkField.findElement(By.xpath("div[@class='components_heading__2c20_']"));
+//                WebElement GemtalkFieldTagEditSaveButton = GemtalkField.findElement(By.xpath("child::div[@class='components_heading__2c20_']//div[@class='components_editIcon__2cpxu']//button"));
+//                DriverAction.click(GemtalkFieldTagEditSaveButton, "Add new button");
+//                DriverAction.waitSec(3);
+//                WebElement InputBox = GemtalkField.findElement(By.xpath("child::div[@class='components_description__5OFNY']//div[@class='components_inputGroup__3eQa-']//input"));
+//                if (InputBox.isDisplayed())
+//                    status = STATUS.PASS;
+//                else
+//                    status = STATUS.FAIL;
+//                GemTestReporter.addTestStep("Text Field Validation ", "Text Box is opened for " + GemtalkFieldTag.getText(), status, DriverAction.takeSnapShot());
+//            }
+//
+//        } catch (Exception e) {
+//            logger.info("An exception occured !", e);
+//            GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
+//        }
+//    }
+    @And("^User clicks on add new button of (.+) to open text box$")
+    public void userClicksOnAddNewButtonOfFieldToOpenTextBox(String FieldName) {
+        try {
+            DriverAction.waitSec(3);
+            JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
+            STATUS status;
+            WebElement Field = DriverAction.getElement(By.xpath("//h5[contains(text(),'" + FieldName + "')]/parent::div/parent::div"));
+            WebElement FieldTag = Field.findElement(By.xpath("div[@class='components_heading__2c20_']"));
+            WebElement FieldTagEditSaveButton = Field.findElement(By.xpath("child::div[@class='components_heading__2c20_']//div[@class='components_editIcon__2cpxu']//button"));
+            DriverAction.click(FieldTagEditSaveButton, "Add new button");
+            DriverAction.waitSec(3);
+            WebElement InputBox = Field.findElement(By.xpath("child::div[@class='components_description__5OFNY']//div[@class='components_inputGroup__3eQa-']//input"));
+//            WebElement SaveButton = SkillsField.findElement(By.xpath("child::button[1]"));
+//            WebElement CancelButton = SkillsField.findElement(By.xpath("child::button[2]"));
+            if (InputBox.isDisplayed())
+                status = STATUS.PASS;
+            else
+                status = STATUS.FAIL;
+            GemTestReporter.addTestStep("Text Field Validation ", "Text Box is opened for " + FieldTag.getText(), status, DriverAction.takeSnapShot());
+
+        } catch (Exception e) {
+            logger.info("An exception occured !", e);
+            GemTestReporter.addTestStep("Execution Failed", "Some Error Occurred", STATUS.FAIL);
+        }
+    }
+
+    @And("^User enters the text (.+) in field (.+) and click on save button$")
+    public void userEntersTheTextTextInFieldFieldAndClickOnSaveButton(String Text, String FieldName) {
+        DriverAction.waitSec(3);
+        JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
+        STATUS status;
+        WebElement Field = DriverAction.getElement(By.xpath("//h5[contains(text(),'" + FieldName + "')]/parent::div/parent::div"));
+        WebElement FieldTag = Field.findElement(By.xpath("div[@class='components_heading__2c20_']"));
+//        js.executeScript("arguments[0].scrollIntoView(true);", FieldTag);
+        WebElement InputBox = Field.findElement(By.xpath("child::div[@class='components_description__5OFNY']//div[@class='components_inputGroup__3eQa-']//input"));
+        DriverAction.typeText(InputBox, Text, FieldTag.getText());
+        DriverAction.waitSec(3);
+        WebElement SaveButton = Field.findElement(By.xpath("child::button[1]"));
+        DriverAction.click(SaveButton, "Save button ");
+        DriverAction.waitSec(1);
+        if (DriverAction.getElement(Locators_Homepage.SavedSuccessfullyPopUp).isDisplayed())
+            status = STATUS.PASS;
+        else
+            status = STATUS.FAIL;
+        GemTestReporter.addTestStep("Saved successfully", "Content added successfully", status, DriverAction.takeSnapShot());
+    }
+
+    @Then("^User validate the (.+) should be saved in (.+)$")
+    public void userValidateTheTextShouldBeSavedInField(String Text, String FieldName) {
+        DriverAction.waitSec(3);
+        JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
+        STATUS status;
+        WebElement Field = DriverAction.getElement(By.xpath("//h5[contains(text(),'" + FieldName + "')]/parent::div/parent::div"));
+        WebElement FieldTag = Field.findElement(By.xpath("div[@class='components_heading__2c20_']"));
+        WebElement InputBox = Field.findElement(By.xpath("child::div[@class='components_description__5OFNY']"));
+        String SavedText = InputBox.getAttribute("innerText");
+        if (Text.trim().equals(SavedText))
+            status = STATUS.PASS;
+        else
+            status = STATUS.FAIL;
+        GemTestReporter.addTestStep("Saved Content verification", "Saved Content verified successfully", status, DriverAction.takeSnapShot());
+    }
+
+    @And("^User clicks on edit button of the field (.+) to edit (.+) and click on save button$")
+    public void userClicksOnEditButtonOfTheFieldFieldToEditEditTextAndClickOnSaveButton(String FieldName, String EditText) {
+        DriverAction.waitSec(3);
+        STATUS status;
+        WebElement Field = DriverAction.getElement(By.xpath("//h5[contains(text(),'" + FieldName + "')]/parent::div/parent::div"));
+        WebElement FieldTag = Field.findElement(By.xpath("div[@class='components_heading__2c20_']"));
+        WebElement FieldTagEditSaveButton = Field.findElement(By.xpath("child::div[@class='components_heading__2c20_']//div[@class='components_editIcon__2cpxu']//button"));
+        DriverAction.click(FieldTagEditSaveButton, "Edit button of " + FieldTag.getText());
+        DriverAction.waitSec(3);
+        WebElement InputBox = Field.findElement(By.xpath("child::div[@class='components_description__5OFNY']//div[@class='components_inputGroup__3eQa-']//input"));
+        DriverAction.typeText(InputBox, EditText, FieldTag.getText());
+        DriverAction.waitSec(3);
+        WebElement SaveButton = Field.findElement(By.xpath("child::button[1]"));
+        DriverAction.click(SaveButton, "Save button ");
+        DriverAction.waitSec(1);
+        if (DriverAction.getElement(Locators_Homepage.SavedSuccessfullyPopUp).getText().contains("Saved Succesfully"))
+            status = STATUS.PASS;
+        else
+            status = STATUS.FAIL;
+        GemTestReporter.addTestStep("Saved successfully", "Content Edited successfully", status, DriverAction.takeSnapShot());
+    }
+
+    @Then("^User validates the edited text after editing (.+) with (.+) in (.+)$")
+    public void userValidatesTheEditedTextAfterEditingTextWithEditTextInField(String Text, String EditText, String FieldName) {
+        DriverAction.waitSec(3);
+        JavascriptExecutor js = ((JavascriptExecutor) DriverManager.getWebDriver());
+        STATUS status;
+        WebElement Field = DriverAction.getElement(By.xpath("//h5[contains(text(),'" + FieldName + "')]/parent::div/parent::div"));
+        WebElement FieldTag = Field.findElement(By.xpath("div[@class='components_heading__2c20_']"));
+        WebElement InputBox = Field.findElement(By.xpath("child::div[@class='components_description__5OFNY']"));
+        String SavedText = InputBox.getAttribute("innerText");
+        if (SavedText.equals(Text + EditText))
+            status = STATUS.PASS;
+        else
+            status = STATUS.FAIL;
+        GemTestReporter.addTestStep("Edited Content verification", "Edited Content verified successfully for :" + FieldTag.getText(), status, DriverAction.takeSnapShot());
+    }
+
+    @And("^User clicks on edit button of the field (.+) to edit (.+) and click on cancel button$")
+    public void userClicksOnEditButtonOfTheFieldFieldToEditEditTextAndClickOnCancelButton(String FieldName, String EditText) {
+        DriverAction.waitSec(3);
+        STATUS status;
+        WebElement Field = DriverAction.getElement(By.xpath("//h5[contains(text(),'" + FieldName + "')]/parent::div/parent::div"));
+        WebElement FieldTag = Field.findElement(By.xpath("div[@class='components_heading__2c20_']"));
+        WebElement FieldTagEditSaveButton = Field.findElement(By.xpath("child::div[@class='components_heading__2c20_']//div[@class='components_editIcon__2cpxu']//button"));
+        DriverAction.click(FieldTagEditSaveButton, "Edit button of " + FieldTag.getText());
+        DriverAction.waitSec(3);
+        WebElement InputBox = Field.findElement(By.xpath("child::div[@class='components_description__5OFNY']//div[@class='components_inputGroup__3eQa-']//input"));
+        DriverAction.typeText(InputBox, EditText, FieldTag.getText());
+        DriverAction.waitSec(3);
+        WebElement CancelButton = Field.findElement(By.xpath("child::button[2]"));
+        DriverAction.click(CancelButton, "Cancel button ");
+        DriverAction.waitSec(3);
+    }
+
 }

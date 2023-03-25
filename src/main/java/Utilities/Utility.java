@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -187,6 +188,10 @@ public class Utility {
             return No_of_likes;
         else
             return No_of_comment;
-
+    }
+    public static WebDriverWait waits()
+    {
+        WebDriverWait wait=new WebDriverWait(DriverManager.getWebDriver(), Duration.ofSeconds(20));
+        return wait;
     }
 }

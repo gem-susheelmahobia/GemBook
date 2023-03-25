@@ -1,10 +1,12 @@
 {
   "environment": "prod",
-  "projectName": "GemBook_Automation",
-  "reportName": "GemBook_Automation Report",
-  "gemjarUserName": "Susheel mahobia",
-  "glueCode": "StepDefinition",
-  "gemjarSubID": "test_id",
+  "project_name": "GEMBOOK_AUTOMATION",
+  "glueCode":"StepDefinition",
+  "enter_point": "https://apis.gemecosystem.com/enter-point",
+  "report_name":"GemBook_Report",
+  "email_report": "null",
+  "email_to": "false",
+  "email_cc": "",
   "dev": {
     "browserName": "firefox",
     "launchUrl": "https://gembook.geminisolutions.com/#/",
@@ -12,7 +14,7 @@
   },
   "prod": {
     "browserName": "chrome",
-    "launchUrl": "https://gembook.geminisolutions.com/#/",
+    "launchUrl": "https://gembookuibeta.geminisolutions.com/#/",
     "browserTimeout": 100
   }
 }

@@ -1,0 +1,5 @@
+Objects\Locators.class
+Utilities\Utility.class
+StepDefinition\StepDefinition.class
+Objects\Locators_Homepage.class
+StepDefinition\Hook.class

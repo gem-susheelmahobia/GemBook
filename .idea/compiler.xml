@@ -6,8 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="GemBook_Automation" />
+        <module name="GEMBOOK" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="GemBook_Automation" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

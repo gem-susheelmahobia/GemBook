@@ -4,7 +4,7 @@ import org.openqa.selenium.By;
 
 public class Locators_Homepage {
     public static By HomePageLogo = By.xpath("//span[@class='logo_headerTextHelper__1Z6Zl']");
-    public static By SidebarToggle = By.xpath("//img[@src='/static/media/menu.93def42e.svg']");
+    public static By SidebarToggle = By.xpath("//img[@class='navbar_menuIcon__oNQ-a']");
     public static By NewsFeeds = By.xpath("//span[contains(text(),'News Feeds')]");
     public static By OtherPortals = By.xpath("//span[contains(text(),'Other Portals')]");
     public static By CountOfTotalLinksExcludingPortalsInsideOtherPortals = By.xpath("//ul[@class='sidebar_menu__3B2HB']//li");
@@ -18,16 +18,20 @@ public class Locators_Homepage {
     public static By ContactUnderProfile = By.xpath("//a[@class='leftWrapper_contact__1RFF9' and contains(@title,'Click To Call')]");
     public static By DesignationUnderProfile = By.xpath("//div[@class='leftWrapper_employeeName__1chtp']//child::div[@class='leftWrapper_designation__3RhyP']");
     public static By BirthdayAndJoiningDateUnderProfile = By.xpath("//div[@class='leftWrapper_rightContent__3P8M5']//child::div[contains(@class,'leftWrapper_detail') and not(contains(text(),'Hobbies')) and not(contains(text(),'-'))]");
-    public static By BirthdayJoiningDateHobbiesUnderProfile=By.xpath("//div[@class='leftWrapper_rightContent__3P8M5']//child::div[contains(@class,'leftWrapper_detail')]");
+    public static By BirthdayJoiningDateHobbiesUnderProfile = By.xpath("//div[@class='leftWrapper_rightContent__3P8M5']//child::div[contains(@class,'leftWrapper_detail')]");
     public static By ReportingManagerProfileImageUnderProfiles = By.xpath("//div[@class='rightWrapper_managerImgWrapper__z6SL3']//child::img");
     public static By ReportingManagerDesignationUnderProfiles = By.xpath("(//div[@class='rightWrapper_managerDetail__tg0lq']//child::p)[2]");
     public static By ReportingManagerNameUnderProfiles = By.xpath("//div[@class='rightWrapper_managerDetail__tg0lq']//child::h5");
-  public static By FieldsInSelfProfile=By.xpath("//div[@class='leftBottom_leftBottomInner__MFdhn']//child::div[@class='components_heading__2c20_']");
-    public static By PostTextBox = By.xpath("//div[@data-placeholder='Write a Post...']");
+    public static By FieldsHeadingInSelfProfile = By.xpath("//div[@class='leftBottom_leftBottomInner__MFdhn']//child::div[@class='components_heading__2c20_']");
+    public static By FieldsWithTextFieldInSelfProfile = By.xpath("//div[@class='leftBottom_leftBottomInner__MFdhn']//child::div[not(contains(@class,'components'))]//child::div[contains(@class,'components_heading__2c20_')]");
+    public static By SavedSuccessfullyPopUp = By.xpath("//div[@role='alert' and contains(text(),'Saved Succesfully')]");
+    public static By PostBox=By.xpath("//input[@class='writePost_inputBox__3bc-C']");
+//    public static By PostTextBox = By.xpath("//div[@data-placeholder='Write Something here...']");
+    public static By PostTextBox =By.xpath("//div[contains(@data-placeholder,'What')]");
     public static By ItalicType = By.xpath("//button[contains(@class,'ql-italic')]//*[name()='svg']");
     public static By BoldType = By.xpath("//button[contains(@class,'ql-bold')]//*[name()='svg']");
-    public static By Content = By.xpath("//div[@data-placeholder='Write a Post...']//p//child::*");
-    public static By ContentPtag = By.xpath("//div[@data-placeholder='Write a Post...']//child::*");
+    public static By Content = By.xpath("//div[contains(@data-placeholder,'What')]//p//child::*");
+    public static By ContentPtag = By.xpath("//div[contains(@data-placeholder,'What')]//child::*");
     public static By UnderlinedType = By.xpath("//button[contains(@class,'ql-underline')]//*[name()='svg']");
     public static By StrikeType = By.xpath("//button[contains(@class,'ql-strike')]//*[name()='svg']");
     public static By ColourChart = By.xpath("//span[@class='ql-color ql-picker ql-color-picker']");
@@ -39,7 +43,7 @@ public class Locators_Homepage {
     public static By JustifyAlign = By.xpath("//span[@id='ql-picker-options-0']//child::span[@data-value='justify']");
     public static By DefaultEventTab = By.xpath("//div[@class='sidebar_eventTabs__2hGpW']//child::div[@class='sidebar_activeTab__hOSnz']");
     public static By PastEvent = By.xpath("//div[@class='sidebar_eventTabs__2hGpW']//child::div[contains(text(),'Past')]");
-    public static By OngoingEvent = By.xpath("//div[@class='sidebar_eventTabs__2hGpW']//child::div[contains(text(),'Ongoing&Upcoming')]");
+    public static By OngoingEvent = By.xpath("//div[@class='sidebar_eventTabs__2hGpW']//child::div[contains(text(),'Ongoing & Upcoming')]");
     public static By EventLists = By.xpath("//div[@class='container event-list']//child::ul[@class='event-ul p-2']");
     public static By NoEventsMessage = By.xpath("//p[contains(text(),'No ongoing or upcoming events available')]");
     public static By SelectYearDropdown = By.xpath("//select[@name='year']");
@@ -71,5 +75,10 @@ public class Locators_Homepage {
     public static By ImagePopUpClose = By.xpath("//div[@class='postContainer_post__17V6S']//div[@class='postContainer_postBody__90jsv']//div[@class='ImageModal_modalWrapper__3bEjR']//child::button");
     public static By ImagePrevButton = By.xpath("//div[@class='postContainer_post__17V6S']//div[@class='postContainer_postBody__90jsv']//child::div[@class='postContainer_postContent__9eiPM']//div[@class='postContainer_imageContainer__kZNaT']//child::a[@class='carousel-control-prev']");
     public static By ImageNextButton = By.xpath("//div[@class='postContainer_post__17V6S']//div[@class='postContainer_postBody__90jsv']//child::div[@class='postContainer_postContent__9eiPM']//div[@class='postContainer_imageContainer__kZNaT']//child::a[@class='carousel-control-next']");
+    //public static By SkillsField=By.xpath("//div[@class='leftBottom_leftBottomInner__MFdhn']//child::div[not(contains(@class,'components'))]//child::div[contains(@class,'components_heading__2c20_')]//h5[text()='Skills']/parent::div/parent::div/parent::div");
+    public static By SkillsField = By.xpath("//h5[contains(text(),'Skills')]/parent::div/parent::div");
+    public static By AchievementField = By.xpath("//h5[contains(text(),'Achievement')]/parent::div/parent::div");
+    public static By TrainingsField = By.xpath("//h5[contains(text(),'Trainings')]/parent::div/parent::div");
+    public static By GemtalkField = By.xpath("//h5[contains(text(),'Gemtalk')]/parent::div/parent::div");
 
 }
